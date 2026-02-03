@@ -21,19 +21,47 @@ body {
     overflow: hidden;
 }
 
-/* Confetti */
+/* Heart Confetti */
 .confetti {
     position: absolute;
-    width: 6px;
-    height: 6px;
-    opacity: 0.6;
+    width: 12px;
+    height: 12px;
+    background: #ff6fae;
+    opacity: 0.75;
     animation: fall linear infinite;
+    transform: rotate(45deg);
+}
+
+/* Heart shape */
+.confetti::before,
+.confetti::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.confetti::before {
+    top: -6px;
+    left: 0;
+}
+
+.confetti::after {
+    left: -6px;
+    top: 0;
 }
 
 @keyframes fall {
-    from { transform: translateY(-10vh); }
-    to { transform: translateY(110vh); }
+    from {
+        transform: translateY(0) rotate(45deg);
+    }
+    to {
+        transform: translateY(120vh) rotate(45deg);
+    }
 }
+
 
 /* Envelope */
 .envelope-wrapper {
@@ -312,4 +340,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
