@@ -21,7 +21,7 @@ body {
     overflow: hidden;
 }
 
-/* Heart Confetti */
+/* ❤️ HEART CONFETTI */
 .confetti {
     position: absolute;
     width: 12px;
@@ -32,7 +32,6 @@ body {
     transform: rotate(45deg);
 }
 
-/* Heart shape */
 .confetti::before,
 .confetti::after {
     content: "";
@@ -54,14 +53,9 @@ body {
 }
 
 @keyframes fall {
-    from {
-        transform: translateY(0) rotate(45deg);
-    }
-    to {
-        transform: translateY(120vh) rotate(45deg);
-    }
+    from { transform: translateY(0) rotate(45deg); }
+    to   { transform: translateY(120vh) rotate(45deg); }
 }
-
 
 /* Envelope */
 .envelope-wrapper {
@@ -126,7 +120,7 @@ body {
     opacity: 0;
 }
 
-/* Card with paper texture + torn edges */
+/* Card */
 .card {
     position: absolute;
     top: 12px;
@@ -150,7 +144,6 @@ body {
     overflow: hidden;
 }
 
-/* Torn paper edge */
 .card::before {
     content: "";
     position: absolute;
@@ -170,7 +163,7 @@ body {
 /* Card content */
 .title {
     font-family: 'Playfair Display', serif;
-    font-size: 24px; /* slightly smaller */
+    font-size: 24px;
     color: #7b2cbf;
     text-align: center;
 }
@@ -194,7 +187,6 @@ body {
     margin-bottom: 6px;
 }
 
-/* Handwriting font */
 .message {
     font-family: 'Dancing Script', cursive;
     font-size: 18px;
@@ -239,20 +231,22 @@ body {
     <div class="seal"></div>
 
     <div class="card">
-        <div class="title">🎂Happy Birthday🎂</div>
+        <div class="title">🎂 Happy Birthday 🎂</div>
         <div class="name">Dr. Harisanthoshini 💜✨</div>
 
         <div class="divider"></div>
 
         <div class="message-title">To my amazing best friend,</div>
+
         <div class="message" id="letter"
-        data-text="Thanks for being with me in all ups and downs .Thank you for being such an incredible person and for all the wonderful memories we’ve shared . Your presence means more than you know . I will never forget you, and I pray for you to live a happy life......
-May this year bring you joy, laughter, and moments you’ll never forget .">
+        data-text="Thanks for being with me in all ups and downs. Thank you for being such an incredible person and for all the wonderful memories we’ve shared. Your presence means more than you know. I will never forget you, and I pray for you to live a happy life.
+
+May this year bring you joy, laughter, and moments you’ll never forget.">
         </div>
 
         <div class="signature" id="signature">
             With love and best wishes,
-            <span>Hemanth Uzumak1🥹</span>
+            <span>Hemanth Uzumak1 🥹</span>
         </div>
     </div>
 
@@ -264,42 +258,6 @@ May this year bring you joy, laughter, and moments you’ll never forget .">
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    function startConfetti() {
-    for (let i = 0; i < 70; i++) {
-        const c = document.createElement("div");
-        c.className = "confetti";
-
-        // Horizontal position
-        c.style.left = Math.random() * 100 + "vw";
-
-        // Start from top OR middle
-        const fromMiddle = Math.random() > 0.5;
-        c.style.top = fromMiddle ? "50vh" : "-10vh";
-
-        // Slower if from middle
-        const duration = fromMiddle
-            ? Math.random() * 4 + 6   // slower
-            : Math.random() * 3 + 3;  // normal
-
-        c.style.animationDuration = duration + "s";
-
-        // Sideways drift
-        const drift = Math.random() * 40 - 20;
-        c.style.transform = `translateX(${drift}px)`;
-
-        // Colors
-        c.style.background =
-            Math.random() > 0.5 ? "#ffd6ff" : "#c77dff";
-
-        document.body.appendChild(c);
-
-        // Cleanup after animation
-        setTimeout(() => c.remove(), duration * 1000);
-    }
-}
-
-
-
     const wrapper = document.getElementById("openEnvelope");
     const envelope = wrapper.querySelector(".envelope");
     const letter = document.getElementById("letter");
@@ -309,6 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = letter.getAttribute("data-text");
     let index = 0;
     let opened = false;
+    let confettiInterval;
 
     music.volume = 0.35;
 
@@ -316,29 +275,54 @@ document.addEventListener("DOMContentLoaded", () => {
         if (index < text.length) {
             letter.textContent += text.charAt(index);
             index++;
-            setTimeout(typeLetter, 70); // slow handwriting feel
+            setTimeout(typeLetter, 70);
         } else {
             signature.classList.add("show");
         }
     }
 
-   wrapper.addEventListener("click", () => {
-    if (opened) return;
-    opened = true;
+    function startConfettiLoop() {
+        if (confettiInterval) return;
 
-    envelope.classList.add("open");
-    music.play().catch(() => {});
+        confettiInterval = setInterval(() => {
+            for (let i = 0; i < 12; i++) {
+                const c = document.createElement("div");
+                c.className = "confetti";
 
-    // Start confetti AFTER opening
-    setTimeout(startConfetti, 600);
+                c.style.left = Math.random() * 100 + "vw";
+                const fromMiddle = Math.random() > 0.5;
+                c.style.top = fromMiddle ? "50vh" : "-10vh";
 
-    setTimeout(typeLetter, 900);
-});
+                const duration = fromMiddle
+                    ? Math.random() * 4 + 6
+                    : Math.random() * 3 + 4;
 
+                c.style.animationDuration = duration + "s";
+
+                const drift = Math.random() * 40 - 20;
+                c.style.transform = `translateX(${drift}px) rotate(45deg)`;
+
+                c.style.background =
+                    Math.random() > 0.5 ? "#ff6fae" : "#c77dff";
+
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), duration * 1000);
+            }
+        }, 900);
+    }
+
+    wrapper.addEventListener("click", () => {
+        if (opened) return;
+        opened = true;
+
+        envelope.classList.add("open");
+        music.play().catch(() => {});
+
+        setTimeout(startConfettiLoop, 600);
+        setTimeout(typeLetter, 900);
+    });
 });
 </script>
 
 </body>
 </html>
-
-
