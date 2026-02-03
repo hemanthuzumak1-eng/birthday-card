@@ -144,16 +144,6 @@ body {
     overflow: hidden;
 }
 
-.card::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: -10%;
-    width: 120%;
-    height: 22px;
-    background: radial-gradient(circle at 10px 10px, transparent 12px, #faf7f2 13px);
-}
-
 .envelope.open ~ .card {
     transform: translateX(-50%) translateY(-140px);
     opacity: 1;
@@ -231,7 +221,7 @@ body {
     <div class="seal"></div>
 
     <div class="card">
-        <div class="title">🎂Happy Birthday🎂</div>
+        <div class="title">🎂 Happy Birthday 🎂</div>
         <div class="name">Dr. Harisanthoshini 💜✨</div>
 
         <div class="divider"></div>
@@ -268,30 +258,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let index = 0;
     let opened = false;
     let confettiInterval;
+    let typingInProgress = false;
 
     music.volume = 0.35;
-
-function startTyping() {
-    const speed = 50; // 👈 constant typing speed (ms)
-    let buffer = "";
-    
-    const typingInterval = setInterval(() => {
-        if (index < text.length) {
-            letter.textContent += text.charAt(index);
-            index++;
-        } else {
-            clearInterval(typingInterval);
-            signature.classList.add("show");
-        }
-    }, speed);
-}
-
 
     function startConfettiLoop() {
         if (confettiInterval) return;
 
         confettiInterval = setInterval(() => {
-            for (let i = 0; i < 12; i++) {
+            const count = typingInProgress ? 3 : 12;
+
+            for (let i = 0; i < count; i++) {
                 const c = document.createElement("div");
                 c.className = "confetti";
 
@@ -305,7 +282,7 @@ function startTyping() {
 
                 c.style.animationDuration = duration + "s";
 
-                const drift = Math.random() * 40 - 20;
+                const drift = Math.random() * 30 - 15;
                 c.style.transform = `translateX(${drift}px) rotate(45deg)`;
 
                 c.style.background =
@@ -315,6 +292,33 @@ function startTyping() {
                 setTimeout(() => c.remove(), duration * 1000);
             }
         }, 900);
+    }
+
+    function startTyping() {
+        const speed = 45;
+        typingInProgress = true;
+
+        const textNode = document.createTextNode("");
+        letter.appendChild(textNode);
+
+        let lastTime = performance.now();
+
+        function frame(now) {
+            if (now - lastTime >= speed && index < text.length) {
+                textNode.data += text.charAt(index);
+                index++;
+                lastTime = now;
+            }
+
+            if (index < text.length) {
+                requestAnimationFrame(frame);
+            } else {
+                typingInProgress = false;
+                signature.classList.add("show");
+            }
+        }
+
+        requestAnimationFrame(frame);
     }
 
     wrapper.addEventListener("click", () => {
@@ -332,7 +336,3 @@ function startTyping() {
 
 </body>
 </html>
-
-
-
-
