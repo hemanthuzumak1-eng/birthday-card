@@ -273,7 +273,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function startTyping() {
     const speed = 50; // 👈 constant typing speed (ms)
-
+    let buffer = "";
+    
     const typingInterval = setInterval(() => {
         if (index < text.length) {
             letter.textContent += text.charAt(index);
@@ -331,6 +332,7 @@ function startTyping() {
 
 </body>
 </html>
+
 
 
 
