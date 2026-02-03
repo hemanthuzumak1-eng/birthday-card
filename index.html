@@ -271,15 +271,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     music.volume = 0.35;
 
-    function typeLetter() {
+function startTyping() {
+    const speed = 50; // 👈 constant typing speed (ms)
+
+    const typingInterval = setInterval(() => {
         if (index < text.length) {
             letter.textContent += text.charAt(index);
             index++;
-            setTimeout(typeLetter, 50);
         } else {
+            clearInterval(typingInterval);
             signature.classList.add("show");
         }
-    }
+    }, speed);
+}
+
 
     function startConfettiLoop() {
         if (confettiInterval) return;
@@ -326,4 +331,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
