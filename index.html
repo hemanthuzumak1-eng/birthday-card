@@ -224,7 +224,7 @@ May this year bring you joy, laughter, and moments you’ll never forget .">
 
         <div class="signature" id="signature">
             With love and best wishes,
-            <span>Hemanth Uzumak1</span>
+            <span>Hemanth Uzumak1🥹</span>
         </div>
     </div>
 
@@ -236,15 +236,41 @@ May this year bring you joy, laughter, and moments you’ll never forget .">
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Confetti
-    for (let i = 0; i < 60; i++) {
+    function startConfetti() {
+    for (let i = 0; i < 70; i++) {
         const c = document.createElement("div");
         c.className = "confetti";
+
+        // Horizontal position
         c.style.left = Math.random() * 100 + "vw";
-        c.style.animationDuration = Math.random() * 4 + 3 + "s";
-        c.style.background = Math.random() > 0.5 ? "#ffd6ff" : "#c77dff";
+
+        // Start from top OR middle
+        const fromMiddle = Math.random() > 0.5;
+        c.style.top = fromMiddle ? "50vh" : "-10vh";
+
+        // Slower if from middle
+        const duration = fromMiddle
+            ? Math.random() * 4 + 6   // slower
+            : Math.random() * 3 + 3;  // normal
+
+        c.style.animationDuration = duration + "s";
+
+        // Sideways drift
+        const drift = Math.random() * 40 - 20;
+        c.style.transform = `translateX(${drift}px)`;
+
+        // Colors
+        c.style.background =
+            Math.random() > 0.5 ? "#ffd6ff" : "#c77dff";
+
         document.body.appendChild(c);
+
+        // Cleanup after animation
+        setTimeout(() => c.remove(), duration * 1000);
     }
+}
+
+
 
     const wrapper = document.getElementById("openEnvelope");
     const envelope = wrapper.querySelector(".envelope");
@@ -268,16 +294,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    wrapper.addEventListener("click", () => {
-        if (opened) return;
-        opened = true;
+   wrapper.addEventListener("click", () => {
+    if (opened) return;
+    opened = true;
 
-        envelope.classList.add("open");
-        music.play().catch(() => {});
-        setTimeout(typeLetter, 900);
-    });
+    envelope.classList.add("open");
+    music.play().catch(() => {});
+
+    // Start confetti AFTER opening
+    setTimeout(startConfetti, 600);
+
+    setTimeout(typeLetter, 900);
+});
+
 });
 </script>
 
 </body>
 </html>
+
