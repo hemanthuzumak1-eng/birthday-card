@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #7b2cbf, #3c096c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    opacity: 0.6;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    from { transform: translateY(-10vh); }
+    to { transform: translateY(110vh); }
+}
+
+/* Envelope */
+.envelope-wrapper {
+    position: relative;
+    width: 320px;
+    height: 220px;
+    cursor: pointer;
+}
+
+.envelope {
+    position: absolute;
+    inset: 0;
+    background: #9d4edd;
+    border-radius: 12px;
+    z-index: 2;
+}
+
+.envelope::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #c77dff;
+    clip-path: polygon(0 0, 100% 0, 50% 55%);
+    transform-origin: top;
+    transition: transform 1s ease;
+    border-radius: 12px;
+}
+
+.envelope.open::before {
+    transform: rotateX(180deg);
+}
+
+/* Wax seal */
+.seal {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    background: radial-gradient(circle at 30% 30%, #ff9ad5, #9d174d);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: inset -4px -6px 10px rgba(0,0,0,0.25),
+                0 6px 12px rgba(0,0,0,0.35);
+    z-index: 3;
+    transition: transform 0.8s ease, opacity 0.6s ease;
+}
+
+.seal::after {
+    content: "✦";
+    color: #ffd6e8;
+    font-size: 24px;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.envelope.open + .seal {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+}
+
+/* Card with paper texture + torn edges */
+.card {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    width: 90%;
+    max-width: 360px;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        #faf7f2,
+        #faf7f2 26px,
+        #f1ece4 27px
+      );
+    border-radius: 12px;
+    padding: 22px 20px 26px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: all 1s ease;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Torn paper edge */
+.card::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -10%;
+    width: 120%;
+    height: 22px;
+    background: radial-gradient(circle at 10px 10px, transparent 12px, #faf7f2 13px);
+}
+
+.envelope.open ~ .card {
+    transform: translateX(-50%) translateY(-140px);
+    opacity: 1;
+    z-index: 4;
+}
+
+/* Card content */
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; /* slightly smaller */
+    color: #7b2cbf;
+    text-align: center;
+}
+
+.name {
+    font-size: 14px;
+    text-align: center;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.divider {
+    margin: 12px auto 16px;
+    width: 80%;
+    border-bottom: 1px dashed #d7bdf0;
+}
+
+.message-title {
+    font-style: italic;
+    color: #7b2cbf;
+    margin-bottom: 6px;
+}
+
+/* Handwriting font */
+.message {
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #3f3f3f;
+    white-space: pre-line;
+    min-height: 120px;
+}
+
+.signature {
+    text-align: right;
+    font-size: 13px;
+    color: #666;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.signature.show { opacity: 1; }
+
+.signature span {
+    display: block;
+    color: #7b2cbf;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.hint {
+    position: absolute;
+    bottom: -38px;
+    width: 100%;
+    text-align: center;
+    color: #f3d9ff;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="envelope-wrapper" id="openEnvelope">
+    <div class="envelope"></div>
+    <div class="seal"></div>
+
+    <div class="card">
+        <div class="title">🎂Happy Birthday🎂</div>
+        <div class="name">Dr. Harisanthoshini 💜✨</div>
+
+        <div class="divider"></div>
+
+        <div class="message-title">To my amazing best friend,</div>
+        <div class="message" id="letter"
+        data-text="Thanks for being with me in all ups and downs .Thank you for being such an incredible person and for all the wonderful memories we’ve shared . Your presence means more than you know . I will never forget you, and I pray for you to live a happy life......
+May this year bring you joy, laughter, and moments you’ll never forget .">
+        </div>
+
+        <div class="signature" id="signature">
+            With love and best wishes,
+            <span>Hemanth Uzumak1</span>
+        </div>
+    </div>
+
+    <div class="hint">Tap the seal to open 💌</div>
+</div>
+
+<audio id="bgMusic" src="birthday.mp3" preload="auto" loop></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Confetti
+    for (let i = 0; i < 60; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.animationDuration = Math.random() * 4 + 3 + "s";
+        c.style.background = Math.random() > 0.5 ? "#ffd6ff" : "#c77dff";
+        document.body.appendChild(c);
+    }
+
+    const wrapper = document.getElementById("openEnvelope");
+    const envelope = wrapper.querySelector(".envelope");
+    const letter = document.getElementById("letter");
+    const signature = document.getElementById("signature");
+    const music = document.getElementById("bgMusic");
+
+    const text = letter.getAttribute("data-text");
+    let index = 0;
+    let opened = false;
+
+    music.volume = 0.35;
+
+    function typeLetter() {
+        if (index < text.length) {
+            letter.textContent += text.charAt(index);
+            index++;
+            setTimeout(typeLetter, 70); // slow handwriting feel
+        } else {
+            signature.classList.add("show");
+        }
+    }
+
+    wrapper.addEventListener("click", () => {
+        if (opened) return;
+        opened = true;
+
+        envelope.classList.add("open");
+        music.play().catch(() => {});
+        setTimeout(typeLetter, 900);
+    });
+});
+</script>
+
+</body>
+</html>
