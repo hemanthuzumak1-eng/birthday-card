@@ -211,6 +211,38 @@ body {
     color: #f3d9ff;
     font-size: 13px;
 }
+
+/* 🔲 IMAGE POPUP */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 999;
+}
+
+.popup.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popup img {
+    max-width: 85%;
+    max-height: 85%;
+    border-radius: 14px;
+    animation: popIn 0.5s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
 </style>
 </head>
 
@@ -221,7 +253,7 @@ body {
     <div class="seal"></div>
 
     <div class="card">
-        <div class="title">🎂 Happy Birthday 🎂</div>
+        <div class="title">🎂Happy Birthday🎂</div>
         <div class="name">Dr. Harisanthoshini 💜✨</div>
 
         <div class="divider"></div>
@@ -243,6 +275,11 @@ May this year bring you joy, laughter, and moments you’ll never forget.">
     <div class="hint">Tap the seal to open 💌</div>
 </div>
 
+<!-- IMAGE POPUP -->
+<div class="popup" id="imagePopup">
+    <img src="memory.jpeg" alt="Memory">
+</div>
+
 <audio id="bgMusic" src="birthday.mp3" preload="auto" loop></audio>
 
 <script>
@@ -253,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const letter = document.getElementById("letter");
     const signature = document.getElementById("signature");
     const music = document.getElementById("bgMusic");
+    const popup = document.getElementById("imagePopup");
 
     const text = letter.getAttribute("data-text");
     let index = 0;
@@ -273,20 +311,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 c.className = "confetti";
 
                 c.style.left = Math.random() * 100 + "vw";
-                const fromMiddle = Math.random() > 0.5;
-                c.style.top = fromMiddle ? "50vh" : "-10vh";
+                c.style.top = Math.random() > 0.5 ? "50vh" : "-10vh";
 
-                const duration = fromMiddle
-                    ? Math.random() * 4 + 6
-                    : Math.random() * 3 + 4;
-
+                const duration = Math.random() * 4 + 4;
                 c.style.animationDuration = duration + "s";
 
                 const drift = Math.random() * 30 - 15;
                 c.style.transform = `translateX(${drift}px) rotate(45deg)`;
 
-                c.style.background =
-                    Math.random() > 0.5 ? "#ff6fae" : "#c77dff";
+                c.style.background = Math.random() > 0.5 ? "#ff6fae" : "#c77dff";
 
                 document.body.appendChild(c);
                 setTimeout(() => c.remove(), duration * 1000);
@@ -301,13 +334,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const textNode = document.createTextNode("");
         letter.appendChild(textNode);
 
-        let lastTime = performance.now();
+        let last = performance.now();
 
         function frame(now) {
-            if (now - lastTime >= speed && index < text.length) {
+            if (now - last >= speed && index < text.length) {
                 textNode.data += text.charAt(index);
                 index++;
-                lastTime = now;
+                last = now;
             }
 
             if (index < text.length) {
@@ -315,11 +348,18 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 typingInProgress = false;
                 signature.classList.add("show");
+
+                setTimeout(() => {
+                    popup.classList.add("show");
+                }, 800);
             }
         }
-
         requestAnimationFrame(frame);
     }
+
+    popup.addEventListener("click", () => {
+        popup.classList.remove("show");
+    });
 
     wrapper.addEventListener("click", () => {
         if (opened) return;
